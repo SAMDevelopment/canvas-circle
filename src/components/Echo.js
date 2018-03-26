@@ -18,22 +18,19 @@ export default class Echo {
     this.y2 = y2
     this.radius = radius
     this.color = color
-    //particle lifetime defined in frames
-    this.lifetimeLeft = lifetime
-    this.opacity = 1
+    this.lifetimeLeft = this.lifetime
 
   }
 
   update() {
     this.lifetimeLeft -= 1
-    this.opacity -= 1 / lifetime
     this.draw()
   }
 
   draw() {
     this.ctx.beginPath()
     this.ctx.save();
-    this.ctx.globalAlpha = this.opacity;
+    this.ctx.globalAlpha = this.lifetimeLeft / this.lifetime;
     this.ctx.strokeStyle = this.color
     this.ctx.lineWidth = this.radius
     this.ctx.moveTo(this.x, this.y)
