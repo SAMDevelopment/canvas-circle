@@ -31,8 +31,8 @@ export default class Circle {
   }
 
   init () {
-    this.generate(100, 50, 100, false)
-    this.generate(50, 100, 150, true)
+    this.generate(30, 50, 100, false)
+    this.generate(30, 100, 150, true)
     this.generate(30, 150, 200, false)
   }
 
@@ -51,14 +51,12 @@ export default class Circle {
   }
 
   animate () {
-    this.canvas.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
-    this.canvas.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+    this.canvas.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
     this.particles.forEach(particle => {
       particle.update(this.mousePosition)
     })
 
-    // Weird to have this at the top of the function.
     requestAnimationFrame(this.animate.bind(this))
   }
 

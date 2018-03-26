@@ -1,3 +1,4 @@
+import Echo from './Echo'
 export default class Particle {
   ctx = null
   x = null
@@ -6,10 +7,13 @@ export default class Particle {
   color = null
   radians = Math.random() * Math.PI * 2
   velocity = 0.07
+  echos = null
+  delayFactor = 0.2
   lastMousePosition = {
     x: null,
     y: null
   }
+
   distanceFromCenter = null
   clockwise = null
 
@@ -22,6 +26,7 @@ export default class Particle {
     this.lastMousePosition = {x, y}
     this.distanceFromCenter = distanceFromCenter
     this.clockwise = clockwise
+    this.echoes = []
   }
 
   update (newMousePosition) {
@@ -30,8 +35,9 @@ export default class Particle {
       y: this.y
     }
 
-    this.lastMousePosition.x += (newMousePosition.x - this.lastMousePosition.x) * 0.2
-    this.lastMousePosition.y += (newMousePosition.y - this.lastMousePosition.y) * 0.2
+    this.lastMousePosition.x += (newMousePosition.x - this.lastMousePosition.x) * this.delayFactor
+    this.lastMousePosition.y += (newMousePosition.y - this.lastMousePosition.y) * this.delayFactor
+    
     // move points over time
     this.radians += this.velocity
     if (this.clockwise === true) {
@@ -41,6 +47,26 @@ export default class Particle {
       this.x = this.lastMousePosition.x + Math.sin(this.radians) * this.distanceFromCenter
       this.y = this.lastMousePosition.y + Math.cos(this.radians) * this.distanceFromCenter
     }
+
+    // Generate particle echo
+    this.echoes.push(
+      new Echo(
+        this.ctx, 
+        lastPoint.x, 
+        lastPoint.y, 
+        this.x, 
+        this.y, 
+        this.color, 
+        this.radius
+      )
+    )
+    
+    this.echoes.forEach(echo => {
+      echo.update()
+    })
+    
+    // Cleans up echos
+    this.echoes = this.echoes.filter(echo => echo.lifetimeLeft > 1)
 
     this.draw(lastPoint)
   }
