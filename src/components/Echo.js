@@ -2,7 +2,10 @@ export default class Echo {
   ctx = null
   x = null
   y = null
-  time = null
+  x2 = null
+  y2 = null
+  lifetime = 30
+  lifetimeLeft = null
   color = null
   radius = null
   opacity = null
@@ -15,14 +18,15 @@ export default class Echo {
     this.y2 = y2
     this.radius = radius
     this.color = color
-    this.time = 30
+    //particle lifetime defined in frames
+    this.lifetimeLeft = lifetime
     this.opacity = 1
 
   }
 
   update() {
-    this.time -= 1
-    this.opacity -= 1 / 30
+    this.lifetimeLeft -= 1
+    this.opacity -= 1 / lifetime
     this.draw()
   }
 

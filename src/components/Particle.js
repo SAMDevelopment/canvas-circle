@@ -7,7 +7,8 @@ export default class Particle {
   color = null
   radians = Math.random() * Math.PI * 2
   velocity = 0.07
-  echos = null
+  delayFactor = 0.2
+  echos = []
   lastMousePosition = {
     x: null,
     y: null
@@ -25,18 +26,19 @@ export default class Particle {
     this.lastMousePosition = {x, y}
     this.distanceFromCenter = distanceFromCenter
     this.clockwise = clockwise
-    this.echos = []
   }
 
   update (newMousePosition) {
+    //contains memory of x and y positions
     const lastPoint = {
       x: this.x,
       y: this.y
     }
 
-    this.echos = this.echos.filter(echo => echo.time > 1)
-    this.lastMousePosition.x += (newMousePosition.x - this.lastMousePosition.x) * 0.2
-    this.lastMousePosition.y += (newMousePosition.y - this.lastMousePosition.y) * 0.2
+    // set delayed mouse follow
+    this.lastMousePosition.x += (newMousePosition.x - this.lastMousePosition.x) * delayFactor
+    this.lastMousePosition.y += (newMousePosition.y - this.lastMousePosition.y) * delayFactor
+    
     // move points over time
     this.radians += this.velocity
     if (this.clockwise === true) {
@@ -59,10 +61,13 @@ export default class Particle {
         this.radius
       )
     )
-    
+    // call update function on each echo
     this.echos.forEach(particle => {
       particle.update()
     })
+
+    // clean up echo array by removing echos with lifetimes < 1
+    this.echos = this.echos.filter(echo => echo.lifetime > 1)
 
     this.draw(lastPoint)
   }
